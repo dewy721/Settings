@@ -24,7 +24,7 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AX
 # load low-level drivers
 #loadrt hal_bb_gpio output_pins=107,126,217,218,224,226 input_pins=108,110,114,117,118
 #loadrt hal_bb_gpio output_pins=107,126,211,212,218,224,226 input_pins=108,109,110,114,117,118,218,222
-loadrt hal_bb_gpio output_pins=117,211,212,218,224,226,242 input_pins=118,107,108,109,110,114,119,126,213,216,217,222,241,225,231
+loadrt hal_bb_gpio output_pins=117,211,212,218,224,226,242 input_pins=118,107,108,109,110,114,119,126,213,216,217,221,222,241,225,231
 loadrt [PRUCONF](DRIVER) prucode=$(HAL_RTMOD_DIR)/[PRUCONF](PRUBIN) [PRUCONF](CONFIG)
 loadrt pid num_chan=2
 loadrt limit1 count=3
@@ -38,6 +38,7 @@ loadrt scale names=spindleScale
 loadrt sum2 names=spindleMath
 loadrt toggle count=8
 loadrt not count=8
+loadrt debounce cfg=1
 
 # Python user-mode HAL module to read ADC value and generate a thermostat output for PWM
 # t = Thermistor table (only epcos_B57560G1104 or 1 supported for now)
@@ -418,6 +419,9 @@ net programStop halui.program.stop <= bb_gpio.p9.in-41
 #setp bb_gpio.p8.in-26.invert 0
 #net powerOn toggle.1.out => halui.machine.on => not.1.in
 #net powerOff not.1.out => halui.machine.off
+
+# Tool pre-setter. (tool length offset)
+net toolPreSetter bb_gpio.p9.in-21 => motion.probe-input
 
 ### Spindle ###
 setp spindleMath.in0 -2048
