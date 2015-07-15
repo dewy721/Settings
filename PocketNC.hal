@@ -21,6 +21,8 @@ loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[TRAJ]AX
 
 
 # load low-level drivers
+#loadrt hal_bb_gpio output_pins=107,126,217,218,224,226 input_pins=108,110,114,117,118
+#loadrt hal_bb_gpio output_pins=107,126,211,212,218,224,226 input_pins=108,109,110,114,117,118,218,222
 loadrt hal_bb_gpio output_pins=117,211,212,218,224,226 input_pins=118,108,109,110,114,119,126,213,216,217,222,241,242,225,231
 loadrt [PRUCONF](DRIVER) prucode=/usr/lib/linuxcnc/xenomai/pru_generic.bin  [PRUCONF](CONFIG)
 loadrt pid num_chan=2
@@ -30,12 +32,11 @@ loadrt limit1 count=3
 loadrt scale names=spindleScale
 
 # Some 'glue' logic
+#loadrt toggle names=pwrToggle,eStpToggle
+#loadrt not names=pwrNot,eStpNot
 loadrt sum2 names=spindleMath
 loadrt toggle count=8
 loadrt not count=8
-loadrt and2 count=3
-loadrt or2 count=1
-loadrt toggle2nist count=1
 
 # Python user-mode HAL module to read ADC value and generate a thermostat output for PWM
 # t = Thermistor table (only epcos_B57560G1104 or 1 supported for now)
@@ -59,36 +60,18 @@ addf limit1.2							servo-thread
 addf [PRUCONF](DRIVER).update			servo-thread
 addf bb_gpio.write						servo-thread
 addf spindleScale						servo-thread
-
-## Add a functions for E-stop button
+#addf pwrToggle							servo-thread
+#addf pwrNot							servo-thread
+#addf eStpToggle						servo-thread
+#addf eStpNot							servo-thread
 addf toggle.0							servo-thread
-
-## Add a functions for Machine power button
 addf toggle.1							servo-thread
-
-## Add a functions for Start/Run button
 addf toggle.2							servo-thread
-
-## Add a functions for Pause button
 addf toggle.3							servo-thread
-addf and2.0							servo-thread
-addf and2.1							servo-thread
-addf and2.2							servo-thread
-addf or2.0							servo-thread
-addf toggle2nist.0						servo-thread
-
-## Add a functions for (un-declared) button
 addf toggle.4							servo-thread
-
-## Add a functions for (un-declared) button
 addf toggle.5							servo-thread
-
-## Add a functions for (un-declared) button
 addf toggle.6							servo-thread
-
-## Add a functions for (un-declared) button
 addf toggle.7							servo-thread
-
 addf not.0							servo-thread
 addf not.1							servo-thread
 addf not.2							servo-thread
@@ -375,9 +358,10 @@ setp bb_gpio.p8.in-19.invert 1
 net estop-loop iocontrol.0.user-enable-out => iocontrol.0.emc-enable-in
 #net eStopToggle toggle.0.in <= bb_gpio.p8.in-07
 setp toggle.0.debounce 2
+#setp bb_gpio.p8.in-07.invert 1
 net eStopOn toggle.0.out => halui.estop.activate => not.0.in
 net eStopOff not.0.out => halui.estop.reset
-net eStopDriversEnable halui.estop.is-activated => bb_gpio.p9.out-26 not.3.in
+net eStopDriversEnable halui.estop.is-activated => bb_gpio.p9.out-26
 
 # Machine power
 net powerToggle toggle.1.in <= bb_gpio.p8.in-26
@@ -385,11 +369,15 @@ setp toggle.1.debounce 2
 setp bb_gpio.p8.in-26.invert 0
 net powerOn toggle.1.out => halui.machine.on => not.1.in
 net powerOff not.1.out => halui.machine.off
+
+
+#net driversEnable halui.machine.is-on => not.2.in
+#net driversEnableInvert not.2.out => bb_gpio.p9.out-26
 net driversEnable halui.machine.is-on => bb_gpio.p9.out-12
 
 
 # Program start/run
-#net progStart halui.program.run <= bb_gpio.p9.in-22
+net progStart halui.program.run <= bb_gpio.p9.in-22
 #setp toggle.1.debounce 2
 #setp bb_gpio.p8.in-26.invert 0
 #net powerOn toggle.2.out => halui.machine.on => not.2.in
@@ -403,18 +391,11 @@ net driversEnable halui.machine.is-on => bb_gpio.p9.out-12
 #net powerOff not.1.out => halui.machine.off
 
 # Program pause
-setp bb_gpio.p9.in-22.invert 1
-net progPauseButton and2.2.in0 <= bb_gpio.p9.in-22
-net pauseOnCheck halui.program.is-running => or2.0.in0
-net pauseOffCheck halui.program.is-paused => or2.0.in1  toggle2nist.0.is-on
-net pauseSane and2.2.in1 <= or2.0.out
-net progPause toggle.3.in <= and2.2.out
-net togglesig toggle.3.out => and2.0.in0
-net isPauseValid not.3.out => and2.0.in1
-net pauseIsIndeedValid and2.0.out => toggle2nist.0.in
-net toggleon toggle2nist.0.on  => halui.program.pause
-net toggleoff toggle2nist.0.off => halui.program.resume
-
+net progPause halui.program.pause <= bb_gpio.p9.in-17
+#setp toggle.1.debounce 2
+#setp bb_gpio.p9.in-17.invert 0
+#net powerOn toggle.1.out => halui.machine.on => not.1.in
+#net powerOff not.1.out => halui.machine.off
 
 # Program stop
 #net programStop halui.program.stop <= bb_gpio.p9.in-41
@@ -452,6 +433,10 @@ setp spindleScale.offset .8
 setp limit1.2.min 0
 setp limit1.2.max 100
 
+
+
+
+net spindleSpeedDummy motion.spindle-speed-out
 #net spindleSpeed motion.spindle-speed-out-abs => spindleScale.in
 net spindleSpeed motion.spindle-speed-out-abs => spindleMath.in1
 net spindleNewSpeed spindleMath.out => spindleScale.in
