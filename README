@@ -1,3 +1,4 @@
+-- This REALLY needs updating ---
 
 This configuration drives a standard 4-axis 3D printer using the PRU for
 high speed step/dir pulse generation and a BeBoPr driver board.  The
