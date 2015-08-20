@@ -39,18 +39,18 @@
 		"P9.24",	/* gpio0.15	Spindle	*/
 		"P9.13",	/* gpio0.31	A_Min	*/
 		"P9.26",	/* gpio0.14	Mtr_Ena	*/
-		"P8.27",	/* Encoder Xa*/
-		"P8.28",	/* Encoder Xb*/
-		"P8.29",	/* Encoder Ya*/
-		"P8.30",	/* Encoder Yb*/
-		"P9.42",	/* A Index*/
-		"P8.33",	/* Encoder Ab*/
-		"P8.35",	/* Encoder Aa*/
-		"P8.39",	/* B Index*/
-		"P8.41",	/* Encoder Ba*/
-		"P8.42",	/* Encoder Bb*/
-		"P8.43",	/* Encoder Za*/
-		"P8.44",	/* Encoder Zb*/
+//		"P8.27",	/* Encoder Xa*/
+//		"P8.28",	/* Encoder Xb*/
+//		"P8.29",	/* Encoder Ya*/
+//		"P8.30",	/* Encoder Yb*/
+//		"P9.42",	/* A Index*/
+//		"P8.33",	/* Encoder Ab*/
+//		"P8.35",	/* Encoder Aa*/
+//		"P8.39",	/* B Index*/
+//		"P8.41",	/* Encoder Ba*/
+//		"P8.42",	/* Encoder Bb*/
+//		"P8.43",	/* Encoder Za*/
+//		"P8.44",	/* Encoder Zb*/
 		"P9.41",	/* X Index*/
 		"P9.25",	/* Y Index*/
 		"P9.16",	/* A Max*/
@@ -123,18 +123,18 @@
 					0x82C 0x27	/* P8.17  Z_min  pulldown*/
 					0x88C 0x37	/* P8.18  Z_max  pulldown*/
 					0x820 0x27	/* P8.19  B_Home  pulldown*/
-					0x8E0 0x27	/* P8.27  Enc_Xa pulldown*/
-					0x8E8 0x27	/* P8.28  Enc_Xb pulldown*/
-					0x8E4 0x27	/* P8.29  Enc_Ya pulldown*/
-					0x8EC 0x27	/* P8.30  Enc_Yb pulldown*/
-					0x9a0 0x27	/* P9.42  A Index pulldown*/
-					0x8D4 0x27	/* P8.33  Enc_Ab pulldown*/
-					0x8D0 0x27	/* P8.35  Enc_Aa pulldown*/
-					0x990 0x27	/* P9.31  B_Index pulldown*/
-					0x8B0 0x27	/* P8.41  Enc_Ba pulldown*/
-					0x8B4 0x27	/* P8.42  Enc_Bb pulldown*/
-					0x8A8 0x27	/* P8.43  Enc_Za pulldown*/
-					0x8AC 0x27	/* P8.44  Enc_Zb pulldown*/
+//					0x8E0 0x27	/* P8.27  Enc_Xa pulldown*/
+//					0x8E8 0x27	/* P8.28  Enc_Xb pulldown*/
+//					0x8E4 0x27	/* P8.29  Enc_Ya pulldown*/
+//					0x8EC 0x27	/* P8.30  Enc_Yb pulldown*/
+//					0x9a0 0x27	/* P9.42  A Index pulldown*/
+//					0x8D4 0x27	/* P8.33  Enc_Ab pulldown*/
+//					0x8D0 0x27	/* P8.35  Enc_Aa pulldown*/
+//					0x990 0x27	/* P9.31  B_Index pulldown*/
+//					0x8B0 0x27	/* P8.41  Enc_Ba pulldown*/
+//					0x8B4 0x27	/* P8.42  Enc_Bb pulldown*/
+//					0x8A8 0x27	/* P8.43  Enc_Za pulldown*/
+//					0x8AC 0x27	/* P8.44  Enc_Zb pulldown*/
 					0x9b4 0x27	/* P9.41  X_Index pulldown*/
 					0x9ac 0x27	/* P9.25  Y_Index pulldown*/
 					0x84C 0x27	/* P9.16  A_Max pulldown*/
